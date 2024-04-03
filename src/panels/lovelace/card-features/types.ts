@@ -78,6 +78,16 @@ export interface SelectOptionsCardFeatureConfig {
   options?: string[];
 }
 
+export interface MediaControlsCardFeatureConfig {
+  type: "media-controls";
+  use_extended_controls: boolean;
+}
+
+export interface MediaVolumeCardFeatureConfig {
+  type: "media-volume";
+  buttons: boolean;
+}
+
 export interface NumericInputCardFeatureConfig {
   type: "numeric-input";
   style?: "buttons" | "slider";
@@ -154,6 +164,8 @@ export type LovelaceCardFeatureConfig =
   | LightColorTempCardFeatureConfig
   | LockCommandsCardFeatureConfig
   | LockOpenDoorCardFeatureConfig
+  | MediaControlsCardFeatureConfig
+  | MediaVolumeCardFeatureConfig
   | NumericInputCardFeatureConfig
   | SelectOptionsCardFeatureConfig
   | TargetHumidityCardFeatureConfig

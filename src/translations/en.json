@@ -6339,6 +6339,18 @@
                 "options": "Options",
                 "customize_options": "Customize options"
               },
+              "media-controls": {
+                "label": "Media Controls",
+                "use_extended_controls": "Use extended controls"
+              },
+              "media-volume": {
+                "label": "Media Volume Controls",
+                "style": "Style",
+                "style_list": {
+                  "buttons": "Buttons",
+                  "slider": "Slider"
+                }
+              },
               "numeric-input": {
                 "label": "Numeric input",
                 "style": "Style",

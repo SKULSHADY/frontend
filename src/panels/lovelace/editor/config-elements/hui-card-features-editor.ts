@@ -36,6 +36,8 @@ import { supportsLightBrightnessCardFeature } from "../../card-features/hui-ligh
 import { supportsLightColorTempCardFeature } from "../../card-features/hui-light-color-temp-card-feature";
 import { supportsLockCommandsCardFeature } from "../../card-features/hui-lock-commands-card-feature";
 import { supportsLockOpenDoorCardFeature } from "../../card-features/hui-lock-open-door-card-feature";
+import { supportsMediaControlsCardFeature } from "../../card-features/hui-media-controls-card-feature";
+import { supportsMediaVolumeCardFeature } from "../../card-features/hui-media-volume-card-feature";
 import { supportsNumericInputCardFeature } from "../../card-features/hui-numeric-input-card-feature";
 import { supportsSelectOptionsCardFeature } from "../../card-features/hui-select-options-card-feature";
 import { supportsTargetHumidityCardFeature } from "../../card-features/hui-target-humidity-card-feature";
@@ -68,6 +70,8 @@ const UI_FEATURE_TYPES = [
   "light-color-temp",
   "lock-commands",
   "lock-open-door",
+  "media-controls",
+  "media-volume",
   "numeric-input",
   "select-options",
   "target-humidity",
@@ -88,6 +92,8 @@ const EDITABLES_FEATURE_TYPES = new Set<UiFeatureTypes>([
   "fan-preset-modes",
   "humidifier-modes",
   "lawn-mower-commands",
+  "media-controls",
+  "media-volume",
   "numeric-input",
   "select-options",
   "update-actions",
@@ -117,6 +123,8 @@ const SUPPORTS_FEATURE_TYPES: Record<
   "light-color-temp": supportsLightColorTempCardFeature,
   "lock-commands": supportsLockCommandsCardFeature,
   "lock-open-door": supportsLockOpenDoorCardFeature,
+  "media-controls": supportsMediaControlsCardFeature,
+  "media-volume": supportsMediaVolumeCardFeature,
   "numeric-input": supportsNumericInputCardFeature,
   "select-options": supportsSelectOptionsCardFeature,
   "target-humidity": supportsTargetHumidityCardFeature,
