@@ -5,13 +5,16 @@ import { computeDomain } from "../../../common/entity/compute_domain";
 import { HomeAssistant } from "../../../types";
 import { LovelaceCardFeature, LovelaceCardFeatureEditor } from "../types";
 import { MediaControlsCardFeatureConfig } from "./types";
+import { isUnavailableState } from "../../../data/entity";
 import "../../../components/ha-control-button";
 import "../../../components/ha-control-button-group";
 import "../../../components/ha-svg-icon";
+import { supportsFeature } from "../../../common/entity/supports-feature";
 import {
   computeMediaControls,
   handleMediaControlClick,
   MediaPlayerEntity,
+  MediaPlayerEntityFeature,
 } from "../../../data/media-player";
 
 export const REPEAT_MODES = ["off", "all", "one"] as const;
@@ -70,6 +73,15 @@ class HuiMediaControlsCardFeature
     );
   }
 
+  private async _toggleMute() {
+    const stateObj = this.stateObj!;
+
+    await this.hass!.callService("media_player", "volume_mute", {
+      entity_id: stateObj.entity_id,
+      is_volume_muted: !stateObj.attributes.is_volume_muted,
+    });
+  }
+
   protected render() {
     if (
       !this._config ||
@@ -106,6 +118,18 @@ class HuiMediaControlsCardFeature
               </ha-control-button>
             `
           )}
+          ${supportsFeature(stateObj, MediaPlayerEntityFeature.VOLUME_MUTE)
+            ? html`<ha-control-button
+                @click=${this._toggleMute}
+                .disabled=${isUnavailableState(stateObj.state)}
+              >
+                <ha-icon
+                  icon=${stateObj.attributes.is_volume_muted
+                    ? "mdi:volume-off"
+                    : "mdi:volume-high"}
+                ></ha-icon>
+              </ha-control-button>`
+            : nothing}
         </ha-control-button-group>
       </div>
     `;
@@ -114,11 +138,9 @@ class HuiMediaControlsCardFeature
   static get styles() {
     return css`
       ha-control-button {
-        --control-button-background-color: var(--card-color);
         width: 100%;
       }
       .container {
-        padding: 0 12px 12px 12px;
         width: auto;
       }
     `;

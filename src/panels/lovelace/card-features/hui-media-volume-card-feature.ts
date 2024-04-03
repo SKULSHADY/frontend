@@ -66,15 +66,6 @@ class HuiMediaVolumeCardFeature
     }
   }
 
-  private async _toggleMute() {
-    const stateObj = this.stateObj!;
-
-    await this.hass!.callService("media_player", "volume_mute", {
-      entity_id: stateObj.entity_id,
-      is_volume_muted: !stateObj.attributes.is_volume_muted,
-    });
-  }
-
   private async _setVolume(ev: CustomEvent) {
     const stateObj = this.stateObj!;
 
@@ -103,18 +94,6 @@ class HuiMediaVolumeCardFeature
     return html`
       <div class="container">
         <ha-control-button-group>
-          ${supportsFeature(stateObj, MediaPlayerEntityFeature.VOLUME_MUTE)
-            ? html`<ha-control-button
-                @click=${this._toggleMute}
-                .disabled=${isUnavailableState(stateObj.state)}
-              >
-                <ha-icon
-                  icon=${stateObj.attributes.is_volume_muted
-                    ? "mdi:volume-off"
-                    : "mdi:volume-high"}
-                ></ha-icon>
-              </ha-control-button>`
-            : nothing}
           ${supportsFeature(stateObj, MediaPlayerEntityFeature.VOLUME_SET)
             ? this._config.style === "buttons"
               ? html`<ha-control-number-buttons
@@ -140,15 +119,14 @@ class HuiMediaVolumeCardFeature
 
   static get styles() {
     return css`
-      ha-control-button {
-        --control-button-background-color: var(--card-color);
-        width: 100%;
-      }
       ha-control-slider {
-        --control-slider-color: var(--card-color);
+        --control-slider-color: var(--feature-color);
+        --control-slider-background: var(--feature-color);
+        --control-slider-background-opacity: 0.2;
+        --control-slider-thickness: 40px;
+        --control-slider-border-radius: 24px;
       }
       .container {
-        padding: 0 12px 12px 12px;
         width: auto;
       }
     `;
