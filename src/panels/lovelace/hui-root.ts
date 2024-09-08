@@ -8,6 +8,7 @@ import {
   mdiFileMultiple,
   mdiFormatListBulletedTriangle,
   mdiHelpCircle,
+  mdiHomeVariantOutline,
   mdiMagnify,
   mdiPencil,
   mdiPlus,
@@ -188,7 +189,7 @@ class HUIRoot extends LitElement {
         buttonAction: this._showQuickBar,
         overflowAction: this._handleShowQuickBar,
         visible: !this._editMode,
-        overflow: this.narrow,
+        overflow: true,
       },
       {
         icon: mdiCommentProcessingOutline,
@@ -197,7 +198,7 @@ class HUIRoot extends LitElement {
         overflowAction: this._handleShowVoiceCommandDialog,
         visible:
           !this._editMode && this._conversation(this.hass.config.components),
-        overflow: this.narrow,
+        overflow: true,
       },
       {
         icon: mdiRefresh,
@@ -299,87 +300,64 @@ class HUIRoot extends LitElement {
       >
         <div class="header">
           <div class="toolbar">
-            ${this._editMode
-              ? html`
-                  <div class="main-title">
-                    ${dashboardTitle ||
-                    this.hass!.localize("ui.panel.lovelace.editor.header")}
-                    <ha-icon-button
-                      slot="actionItems"
-                      .label=${this.hass!.localize(
-                        "ui.panel.lovelace.editor.edit_lovelace.edit_title"
-                      )}
-                      .path=${mdiPencil}
-                      class="edit-icon"
-                      @click=${this._editDashboard}
-                    ></ha-icon-button>
-                  </div>
-                  <div class="action-items">${this._renderActionItems()}</div>
-                `
-              : html`
-                  ${curViewConfig?.subview
-                    ? html`
-                        <ha-icon-button-arrow-prev
-                          slot="navigationIcon"
-                          @click=${this._goBack}
-                        ></ha-icon-button-arrow-prev>
-                      `
-                    : html`
-                        <ha-menu-button
-                          slot="navigationIcon"
-                          .hass=${this.hass}
-                          .narrow=${this.narrow}
-                        ></ha-menu-button>
-                      `}
-                  ${curViewConfig?.subview
-                    ? html`<div class="main-title">${curViewConfig.title}</div>`
-                    : views.filter((view) => !view.subview).length > 1
-                      ? html`
-                          <ha-tabs
-                            slot="title"
-                            scrollable
-                            .selected=${this._curView}
-                            @iron-activate=${this._handleViewSelected}
-                            dir=${computeRTLDirection(this.hass!)}
-                          >
-                            ${views.map(
-                              (view) => html`
-                                <paper-tab
-                                  aria-label=${ifDefined(view.title)}
-                                  class=${classMap({
-                                    "hide-tab": Boolean(
-                                      view.subview ||
-                                        (view.visible !== undefined &&
-                                          ((Array.isArray(view.visible) &&
-                                            !view.visible.some(
-                                              (e) =>
-                                                e.user === this.hass!.user?.id
-                                            )) ||
-                                            view.visible === false))
-                                    ),
-                                  })}
-                                >
-                                  ${view.icon
-                                    ? html`
-                                        <ha-icon
-                                          title=${ifDefined(view.title)}
-                                          .icon=${view.icon}
-                                        ></ha-icon>
-                                      `
-                                    : view.title || "Unnamed view"}
-                                </paper-tab>
-                              `
-                            )}
-                          </ha-tabs>
-                        `
-                      : html`
-                          <div class="main-title">
-                            ${views[0]?.title ?? dashboardTitle}
-                          </div>
-                        `}
-                  <div class="action-items">${this._renderActionItems()}</div>
-                `}
+            <ha-menu-button
+              slot="navigationIcon"
+              .hass=${this.hass}
+              .narrow=${this.narrow}
+            >
+            </ha-menu-button>
+            <div class="main-title">
+              <ha-svg-icon
+                .path=${mdiHomeVariantOutline}
+                class="main-icon"
+              ></ha-svg-icon>
+              Home
+            </div>
+            <div class="action-items">${this._renderActionItems()}</div>
           </div>
+        </div>
+        <div class="footer">
+          ${curViewConfig?.subview
+            ? html`<div class="main-title">${curViewConfig.title}</div>`
+            : views.filter((view) => !view.subview).length > 1
+              ? html`
+                  <ha-tabs
+                    slot="title"
+                    scrollable
+                    .selected=${this._curView}
+                    @iron-activate=${this._handleViewSelected}
+                    dir=${computeRTLDirection(this.hass!)}
+                  >
+                    ${views.map(
+                      (view) => html`
+                        <paper-tab
+                          aria-label=${ifDefined(view.title)}
+                          class=${classMap({
+                            "hide-tab": Boolean(
+                              view.subview ||
+                                (view.visible !== undefined &&
+                                  ((Array.isArray(view.visible) &&
+                                    !view.visible.some(
+                                      (e) => e.user === this.hass!.user?.id
+                                    )) ||
+                                    view.visible === false))
+                            ),
+                          })}
+                        >
+                          ${view.icon
+                            ? html`
+                                <ha-icon
+                                  title=${ifDefined(view.title)}
+                                  .icon=${view.icon}
+                                ></ha-icon>
+                              `
+                            : view.title || "Unnamed view"}
+                        </paper-tab>
+                      `
+                    )}
+                  </ha-tabs>
+                `
+              : html`<div class="main-title">${this.config.title}</div>`}
           ${this._editMode
             ? html`
                 <paper-tabs
@@ -977,7 +955,22 @@ class HUIRoot extends LitElement {
           z-index: 4;
           transition: box-shadow 200ms linear;
         }
-        :host([scrolled]) .header {
+        .footer {
+          background-color: var(--app-footer-background-color);
+          color: var(--app-header-text-color, white);
+          border-bottom: var(--app-header-border-bottom, none);
+          position: fixed;
+          width: var(--mdc-top-app-bar-width, 100%);
+          padding-top: env(safe-area-inset-top);
+          z-index: 4;
+          transition: box-shadow 200ms linear;
+          top: unset;
+          bottom: 0;
+          height: var(--footer-height);
+          --mdc-icon-button-size: 32px;
+        }
+        :host([scrolled]) .header,
+        .footer {
           box-shadow: var(
             --mdc-top-app-bar-fixed-box-shadow,
             0px 2px 4px -1px rgba(0, 0, 0, 0.2),
@@ -989,24 +982,37 @@ class HUIRoot extends LitElement {
           background-color: var(--app-header-edit-background-color, #455a64);
           color: var(--app-header-edit-text-color, white);
         }
+        .edit-mode .footer {
+          background-color: var(--app-header-edit-background-color, #455a64);
+          color: var(--app-header-edit-text-color, white);
+          height: calc(var(--footer-height));
+        }
         .toolbar {
           height: var(--header-height);
           display: flex;
           align-items: center;
-          font-size: 20px;
-          padding: 0px 12px;
-          font-weight: 400;
+          font-size: 22px;
+          font-weight: 500;
+          padding: 0px 16px;
           box-sizing: border-box;
         }
-        @media (max-width: 599px) {
-          .toolbar {
-            padding: 0 4px;
-          }
+        .footer .toolbar {
+          height: var(--footer-height);
+          display: flex;
+          align-items: center;
+          font-size: 22px;
+          padding: 0;
+          box-sizing: border-box;
         }
         .main-title {
-          margin: var(--margin-title);
-          line-height: 20px;
+          display: flex;
+          flex-direction: row;
           flex-grow: 1;
+          align-items: end;
+          justify-content: center;
+        }
+        .main-icon {
+          margin-right: 4px;
         }
         .action-items {
           white-space: nowrap;
@@ -1069,15 +1075,19 @@ class HUIRoot extends LitElement {
           padding-top: calc(var(--header-height) + env(safe-area-inset-top));
           min-height: 100vh;
           box-sizing: border-box;
-          padding-left: env(safe-area-inset-left);
-          padding-right: env(safe-area-inset-right);
           padding-inline-start: env(safe-area-inset-left);
           padding-inline-end: env(safe-area-inset-right);
-          padding-bottom: env(safe-area-inset-bottom);
+          padding-left: 16px;
+          padding-right: 16px;
+          padding-bottom: var(--footer-height);
+          background: var(--app-header-background-color);
+        }
+        hui-view {
           background: var(
             --lovelace-background,
             var(--primary-background-color)
           );
+          border-radius: 24px;
         }
         #view > * {
           flex: 1 1 100%;
@@ -1087,9 +1097,9 @@ class HUIRoot extends LitElement {
          * In edit mode we have the tab bar on a new line *
          */
         .edit-mode #view {
-          padding-top: calc(
-            var(--header-height) + 48px + env(safe-area-inset-top)
-          );
+          padding-top: calc(1.8 * var(--footer-height));
+          padding-bottom: 0;
+          bottom: var(--footer-height);
         }
         .hide-tab {
           display: none;
@@ -1104,6 +1114,19 @@ class HUIRoot extends LitElement {
         }
         .child-view-icon {
           opacity: 0.5;
+        }
+        @media (max-width: 599px) {
+          .toolbar {
+            padding: 0 8px;
+          }
+          #view {
+            padding-left: 0px;
+            padding-right: 0px;
+          }
+          hui-view {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+          }
         }
       `,
     ];

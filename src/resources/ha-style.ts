@@ -48,7 +48,7 @@ const mainStyles = css`
     --clear-background-color: #ffffff;
 
     /* for header */
-    --header-height: 56px;
+    --header-height: 64px;
 
     /* for label-badge */
     --label-badge-red: var(--error-color);
