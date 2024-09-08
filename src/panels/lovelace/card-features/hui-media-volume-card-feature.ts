@@ -124,7 +124,7 @@ class HuiMediaVolumeCardFeature
         --control-slider-background: var(--feature-color);
         --control-slider-background-opacity: 0.2;
         --control-slider-thickness: 40px;
-        --control-slider-border-radius: 24px;
+        --control-slider-border-radius: 99px;
       }
       .container {
         width: auto;

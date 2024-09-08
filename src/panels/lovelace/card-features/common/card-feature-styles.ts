@@ -25,6 +25,6 @@ export const cardFeatureStyles = css`
     --control-slider-background: var(--feature-color);
     --control-slider-background-opacity: 0.2;
     --control-slider-thickness: var(--feature-height);
-    --control-slider-border-radius: var(--feature-border-radius);
+    --control-slider-border-radius: 99px;
   }
 `;

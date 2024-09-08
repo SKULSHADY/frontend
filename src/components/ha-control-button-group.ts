@@ -17,7 +17,7 @@ export class HaControlButtonGroup extends LitElement {
   static get styles(): CSSResultGroup {
     return css`
       :host {
-        --control-button-group-spacing: 12px;
+        --control-button-group-spacing: 8px;
         --control-button-group-thickness: 40px;
         height: var(--control-button-group-thickness);
         width: auto;
@@ -30,7 +30,6 @@ export class HaControlButtonGroup extends LitElement {
         height: 100%;
       }
       ::slotted(*) {
-        flex: 1;
         height: 100%;
         width: 100%;
       }

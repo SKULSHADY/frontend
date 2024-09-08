@@ -141,7 +141,7 @@ export class HaControlSelectMenu extends SelectBase {
         --control-select-menu-background-opacity: 0.2;
         --control-select-menu-border-radius: 14px;
         --control-select-menu-height: 48px;
-        --control-select-menu-padding: 6px 10px;
+        --control-select-menu-padding: 8px 12px;
         --mdc-icon-size: 20px;
         --ha-ripple-color: var(--secondary-text-color);
         font-size: 14px;

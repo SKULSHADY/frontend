@@ -40,9 +40,9 @@ export class HuiCardFeatures extends LitElement {
       :host {
         --feature-color: var(--state-icon-color);
         --feature-padding: 12px;
-        --feature-height: 42px;
-        --feature-border-radius: 12px;
-        --feature-button-spacing: 12px;
+        --feature-height: 40px;
+        --feature-border-radius: 24px;
+        --feature-button-spacing: 8px;
         position: relative;
         width: 100%;
       }

@@ -45,7 +45,7 @@ export class HaMoreInfoControlSelectContainer extends LitElement {
       }
 
       ::slotted(*) {
-        min-width: 120px;
+        min-width: 100px;
         max-width: 160px;
         flex: none;
       }

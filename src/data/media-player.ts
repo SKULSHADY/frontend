@@ -318,7 +318,8 @@ export const computeMediaControls = (
 
   if (
     (state === "playing" || state === "paused" || assumedState) &&
-    supportsFeature(stateObj, MediaPlayerEntityFeature.PREVIOUS_TRACK)
+    supportsFeature(stateObj, MediaPlayerEntityFeature.PREVIOUS_TRACK) &&
+    useExtendedControls
   ) {
     buttons.push({
       icon: mdiSkipPrevious,
@@ -387,7 +388,8 @@ export const computeMediaControls = (
 
   if (
     (state === "playing" || state === "paused" || assumedState) &&
-    supportsFeature(stateObj, MediaPlayerEntityFeature.NEXT_TRACK)
+    supportsFeature(stateObj, MediaPlayerEntityFeature.NEXT_TRACK) &&
+    useExtendedControls
   ) {
     buttons.push({
       icon: mdiSkipNext,
