@@ -97,7 +97,6 @@ export class HaBadge extends LitElement {
         align-items: flex-start;
         padding-inline-start: initial;
         text-align: center;
-        font-family: Roboto;
       }
       .label {
         font-size: 10px;
@@ -119,9 +118,9 @@ export class HaBadge extends LitElement {
         --mdc-icon-size: 18px;
         color: var(--badge-color);
         line-height: 0;
-        margin-left: -4px;
+        margin-left: -2px;
         margin-right: 0;
-        margin-inline-start: -4px;
+        margin-inline-start: -2px;
         margin-inline-end: 0;
       }
       ::slotted(img[slot="icon"]) {
@@ -130,9 +129,9 @@ export class HaBadge extends LitElement {
         border-radius: 50%;
         object-fit: cover;
         overflow: hidden;
-        margin-left: -10px;
+        margin-left: -8px;
         margin-right: 0;
-        margin-inline-start: -10px;
+        margin-inline-start: -8px;
         margin-inline-end: 0;
       }
       .badge.icon-only {
