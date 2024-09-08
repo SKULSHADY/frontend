@@ -345,7 +345,7 @@ const mainStyles = css`
       @apply --paper-font-common-base;
 
       font-size: 24px;
-      font-weight: 400;
+      font-weight: 500;
       letter-spacing: -0.012em;
       line-height: 32px;
     };

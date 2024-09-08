@@ -181,7 +181,7 @@ export class DemoHaControlSelect extends LitElement {
         margin: 0;
       }
       label {
-        font-weight: 600;
+        font-weight: 500;
       }
       .custom {
         --mdc-icon-size: 24px;

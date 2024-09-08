@@ -144,7 +144,7 @@ export class DemoHaBarSlider extends LitElement {
         margin: 0;
       }
       label {
-        font-weight: 600;
+        font-weight: 500;
       }
       .custom {
         --control-slider-color: #ffcf4c;
