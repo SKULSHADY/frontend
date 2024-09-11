@@ -1,4 +1,5 @@
 import "../card-features/hui-alarm-modes-card-feature";
+import "../card-features/hui-climate-controls-card-feature";
 import "../card-features/hui-climate-fan-modes-card-feature";
 import "../card-features/hui-climate-swing-modes-card-feature";
 import "../card-features/hui-climate-hvac-modes-card-feature";
@@ -34,6 +35,7 @@ import {
 
 const TYPES: Set<LovelaceCardFeatureConfig["type"]> = new Set([
   "alarm-modes",
+  "climate-controls",
   "climate-fan-modes",
   "climate-swing-modes",
   "climate-hvac-modes",

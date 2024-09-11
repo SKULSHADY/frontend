@@ -6271,6 +6271,10 @@
                   "return_home": "[%key:ui::dialogs::more_info_control::vacuum::return_home%]"
                 }
               },
+              "climate-controls": {
+                "label": "Climate controls",
+                "show_hvac_modes": "Show HVAC Modes"
+              },
               "climate-fan-modes": {
                 "label": "Climate fan modes",
                 "style": "[%key:ui::panel::lovelace::editor::features::types::climate-preset-modes::style%]",

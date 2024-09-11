@@ -101,6 +101,12 @@ export interface TargetTemperatureCardFeatureConfig {
   type: "target-temperature";
 }
 
+export interface ClimateControlsCardFeatureConfig {
+  type: "climate-controls";
+  fan_modes?: string[];
+  show_hvac_modes: boolean;
+}
+
 export interface WaterHeaterOperationModesCardFeatureConfig {
   type: "water-heater-operation-modes";
   operation_modes?: OperationMode[];
@@ -147,6 +153,7 @@ export interface UpdateActionsCardFeatureConfig {
 
 export type LovelaceCardFeatureConfig =
   | AlarmModesCardFeatureConfig
+  | ClimateControlsCardFeatureConfig
   | ClimateFanModesCardFeatureConfig
   | ClimateSwingModesCardFeatureConfig
   | ClimateHvacModesCardFeatureConfig
