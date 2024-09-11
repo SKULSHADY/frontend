@@ -168,7 +168,7 @@ export class GridSection extends LitElement implements LovelaceSectionElement {
           --base-column-count: 4;
           --row-gap: var(--ha-section-grid-row-gap, 8px);
           --column-gap: var(--ha-section-grid-column-gap, 8px);
-          --row-height: var(--ha-section-grid-row-height, 56px);
+          --row-height: var(--ha-section-grid-row-height, 80px);
           display: flex;
           flex-direction: column;
           gap: var(--row-gap);

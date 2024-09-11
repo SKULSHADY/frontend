@@ -314,9 +314,9 @@ export class SectionsView extends LitElement implements LovelaceViewElement {
   static get styles(): CSSResultGroup {
     return css`
       :host {
-        --row-height: var(--ha-view-sections-row-height, 56px);
+        --row-height: var(--ha-view-sections-row-height, 80px);
         --row-gap: var(--ha-view-sections-row-gap, 8px);
-        --column-gap: var(--ha-view-sections-column-gap, 32px);
+        --column-gap: var(--ha-view-sections-column-gap, 24px);
         --column-max-width: var(--ha-view-sections-column-max-width, 500px);
         --column-min-width: var(--ha-view-sections-column-min-width, 320px);
         display: block;
@@ -349,6 +349,7 @@ export class SectionsView extends LitElement implements LovelaceViewElement {
         grid-auto-flow: row;
         gap: var(--row-gap) var(--column-gap);
         padding: var(--row-gap) var(--column-gap);
+        padding-bottom: 16px;
         box-sizing: content-box;
         margin: 0 auto;
         max-width: calc(
@@ -363,6 +364,7 @@ export class SectionsView extends LitElement implements LovelaceViewElement {
       @media (max-width: 600px) {
         .container {
           --column-gap: var(--row-gap);
+          padding: 8px 16px 16px;
         }
       }
 
@@ -394,7 +396,7 @@ export class SectionsView extends LitElement implements LovelaceViewElement {
 
       hui-view-badges {
         display: block;
-        margin: 16px 8px;
+        margin: 24px 16px 0px 16px;
         text-align: center;
       }
 
