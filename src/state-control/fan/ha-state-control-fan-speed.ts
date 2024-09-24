@@ -142,7 +142,7 @@ export class HaStateControlFanSpeed extends LitElement {
         height: 45vh;
         max-height: 320px;
         min-height: 200px;
-        --control-slider-thickness: 130px;
+        --control-slider-thickness: 150px;
         --control-slider-border-radius: 99px;
         --control-slider-color: var(--primary-color);
         --control-slider-background: var(--disabled-color);
@@ -153,8 +153,8 @@ export class HaStateControlFanSpeed extends LitElement {
         height: 45vh;
         max-height: 320px;
         min-height: 200px;
-        --control-select-thickness: 130px;
-        --control-select-border-radius: 36px;
+        --control-select-thickness: 150px;
+        --control-select-border-radius: 99px;
         --control-select-color: var(--primary-color);
         --control-select-background: var(--disabled-color);
         --control-select-background-opacity: 0.2;

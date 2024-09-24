@@ -187,7 +187,6 @@ export class HaControlSwitch extends LitElement {
         width: 100%;
         border-radius: var(--control-switch-border-radius);
         overflow: hidden;
-        padding: var(--control-switch-padding);
         display: flex;
       }
       .switch .background {
@@ -204,9 +203,6 @@ export class HaControlSwitch extends LitElement {
         width: 50%;
         height: 100%;
         background: lightgrey;
-        border-radius: calc(
-          var(--control-switch-border-radius) - var(--control-switch-padding)
-        );
         transition:
           transform 180ms ease-in-out,
           background-color 180ms ease-in-out;

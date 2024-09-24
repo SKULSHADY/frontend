@@ -167,8 +167,8 @@ export class HaStateControlLockToggle extends LitElement {
         height: 45vh;
         max-height: 320px;
         min-height: 200px;
-        --control-switch-thickness: 130px;
-        --control-switch-border-radius: 36px;
+        --control-switch-thickness: 150px;
+        --control-switch-border-radius: 99px;
         --control-switch-padding: 6px;
         --mdc-icon-size: 24px;
       }
@@ -178,7 +178,7 @@ export class HaStateControlLockToggle extends LitElement {
       .buttons {
         display: flex;
         flex-direction: column;
-        width: 130px;
+        width: 150px;
         height: 45vh;
         max-height: 320px;
         min-height: 200px;
@@ -188,7 +188,7 @@ export class HaStateControlLockToggle extends LitElement {
       ha-control-button {
         flex: 1;
         width: 100%;
-        --control-button-border-radius: 36px;
+        --control-button-border-radius: 99px;
         --mdc-icon-size: 24px;
       }
       ha-control-button.active {

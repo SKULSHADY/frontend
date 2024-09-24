@@ -98,8 +98,8 @@ export class HaStateControlAlarmControlPanelModes extends LitElement {
         height: 45vh;
         max-height: max(320px, var(--modes-count, 1) * 80px);
         min-height: max(200px, var(--modes-count, 1) * 80px);
-        --control-select-thickness: 130px;
-        --control-select-border-radius: 36px;
+        --control-select-thickness: 150px;
+        --control-select-border-radius: 99px;
         --control-select-color: var(--primary-color);
         --control-select-background: var(--disabled-color);
         --control-select-background-opacity: 0.2;

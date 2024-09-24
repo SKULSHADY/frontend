@@ -142,15 +142,15 @@ export class HaStateControlValveToggle extends LitElement {
         height: 45vh;
         max-height: 320px;
         min-height: 200px;
-        --control-switch-thickness: 130px;
-        --control-switch-border-radius: 36px;
+        --control-switch-thickness: 150px;
+        --control-switch-border-radius: 99px;
         --control-switch-padding: 6px;
         --mdc-icon-size: 24px;
       }
       .buttons {
         display: flex;
         flex-direction: column;
-        width: 130px;
+        width: 150px;
         height: 45vh;
         max-height: 320px;
         min-height: 200px;
