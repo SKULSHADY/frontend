@@ -15,13 +15,17 @@ import {
 import { customElement, state } from "lit/decorators";
 import { ifDefined } from "lit/directives/if-defined";
 import { styleMap } from "lit/directives/style-map";
+import memoizeOne from "memoize-one";
 import { DOMAINS_TOGGLE } from "../../../common/const";
 import { transform } from "../../../common/decorators/transform";
 import { applyThemesOnElement } from "../../../common/dom/apply_themes_on_element";
 import { fireEvent } from "../../../common/dom/fire_event";
+import { computeCssColor } from "../../../common/color/compute-color";
+import { hsv2rgb, rgb2hex, rgb2hsv } from "../../../common/color/convert-color";
 import { computeDomain } from "../../../common/entity/compute_domain";
 import { computeStateDomain } from "../../../common/entity/compute_state_domain";
 import { computeStateName } from "../../../common/entity/compute_state_name";
+import { stateActive } from "../../../common/entity/state_active";
 import {
   stateColorBrightness,
   stateColorCss,
@@ -31,6 +35,7 @@ import { iconColorCSS } from "../../../common/style/icon_color_css";
 import { LocalizeFunc } from "../../../common/translations/localize";
 import "../../../components/ha-card";
 import "../../../components/ha-ripple";
+import "../../../components/tile/ha-tile-icon";
 import { CLIMATE_HVAC_ACTION_TO_MODE } from "../../../data/climate";
 import {
   configContext,
@@ -169,7 +174,6 @@ export class HuiButtonCard extends LitElement implements LovelaceCard {
       hold_action: { action: "more-info" },
       show_icon: true,
       show_name: true,
-      state_color: true,
       ...config,
     };
   }
@@ -194,6 +198,15 @@ export class HuiButtonCard extends LitElement implements LovelaceCard {
 
     const colored = stateObj && this.getStateColor(stateObj, this._config);
 
+    const color = stateObj
+      ? this._computeStateColor(stateObj, this._config.color)
+      : "primary";
+
+    const style = {
+      "--color": color,
+      "--state-color": color,
+    };
+
     return html`
       <ha-card
         @action=${this._handleAction}
@@ -207,29 +220,34 @@ export class HuiButtonCard extends LitElement implements LovelaceCard {
         tabindex=${ifDefined(
           hasAction(this._config.tap_action) ? "0" : undefined
         )}
-        style=${styleMap({
-          "--state-color": colored ? this._computeColor(stateObj) : undefined,
-        })}
+        style=${styleMap(style)}
       >
         <ha-ripple></ha-ripple>
         ${this._config.show_icon
           ? html`
-              <ha-state-icon
-                tabindex="-1"
-                data-domain=${ifDefined(
-                  stateObj ? computeStateDomain(stateObj) : undefined
-                )}
-                data-state=${ifDefined(stateObj?.state)}
-                .icon=${this._config.icon}
-                .hass=${this.hass}
-                .stateObj=${stateObj}
-                style=${styleMap({
-                  filter: colored ? stateColorBrightness(stateObj) : undefined,
-                  height: this._config.icon_height
-                    ? this._config.icon_height
-                    : "",
-                })}
-              ></ha-state-icon>
+              <ha-tile-icon>
+                <ha-state-icon
+                  tabindex="-1"
+                  data-domain=${ifDefined(
+                    stateObj ? computeStateDomain(stateObj) : undefined
+                  )}
+                  data-state=${ifDefined(stateObj?.state)}
+                  .icon=${this._config.icon}
+                  .hass=${this.hass}
+                  .stateObj=${stateObj}
+                  style=${styleMap({
+                    filter: colored
+                      ? stateColorBrightness(stateObj)
+                      : undefined,
+                    height: this._config.icon_height
+                      ? this._config.icon_height
+                      : "",
+                    width: this._config.icon_height
+                      ? this._config.icon_height
+                      : "",
+                  })}
+                ></ha-state-icon>
+              </ha-tile-icon>
             `
           : ""}
         ${this._config.show_name
@@ -273,8 +291,11 @@ export class HuiButtonCard extends LitElement implements LovelaceCard {
     return [
       iconColorCSS,
       css`
+        :host {
+          -webkit-tap-highlight-color: transparent;
+        }
         ha-card {
-          --state-inactive-color: var(--paper-item-icon-color, #44739e);
+          --state-inactive-color: initial;
           --state-color: var(--paper-item-icon-color, #44739e);
           --ha-ripple-color: var(--state-color);
           --ha-ripple-hover-opacity: 0.04;
@@ -284,8 +305,10 @@ export class HuiButtonCard extends LitElement implements LovelaceCard {
           flex-direction: column;
           align-items: center;
           text-align: center;
-          padding: 4% 0;
-          font-size: 16.8px;
+          padding: 12px;
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 20px;
           height: 100%;
           box-sizing: border-box;
           justify-content: center;
@@ -297,22 +320,27 @@ export class HuiButtonCard extends LitElement implements LovelaceCard {
           outline: none;
         }
 
+        ha-tile-icon {
+          --tile-icon-color: var(--color);
+        }
+
         ha-state-icon {
           width: 40%;
           height: auto;
           max-height: 80%;
-          color: var(--state-color);
+          color: var(--color);
           --mdc-icon-size: 100%;
           transition: transform 180ms ease-in-out;
           pointer-events: none;
+          outline: none;
         }
 
         ha-state-icon + span {
           margin-top: 8px;
         }
 
-        ha-state-icon,
         span {
+          margin-top: 8px;
           outline: none;
         }
 
@@ -340,23 +368,42 @@ export class HuiButtonCard extends LitElement implements LovelaceCard {
     ];
   }
 
-  private _computeColor(stateObj: HassEntity): string | undefined {
-    if (stateObj.attributes.rgb_color) {
-      return `rgb(${stateObj.attributes.rgb_color.join(",")})`;
-    }
-    if (stateObj.attributes.hvac_action) {
-      const hvacAction = stateObj.attributes.hvac_action;
-      if (hvacAction in CLIMATE_HVAC_ACTION_TO_MODE) {
-        return stateColorCss(stateObj, CLIMATE_HVAC_ACTION_TO_MODE[hvacAction]);
+  private _computeStateColor = memoizeOne(
+    (entity: HassEntity, color?: string) => {
+      if (!color || color === "none") {
+        return undefined;
       }
-      return undefined;
+
+      if (color === "state") {
+        // Use light color if the light support rgb
+        if (
+          computeDomain(entity.entity_id) === "light" &&
+          entity.attributes.rgb_color
+        ) {
+          const hsvColor = rgb2hsv(entity.attributes.rgb_color);
+
+          // Modify the real rgb color for better contrast
+          if (hsvColor[1] < 0.4) {
+            // Special case for very light color (e.g: white)
+            if (hsvColor[1] < 0.1) {
+              hsvColor[2] = 225;
+            } else {
+              hsvColor[1] = 0.4;
+            }
+          }
+          return rgb2hex(hsv2rgb(hsvColor));
+        }
+        // Fallback to state color
+        return stateColorCss(entity);
+      }
+
+      if (color) {
+        // Use custom color if active
+        return stateActive(entity) ? computeCssColor(color) : undefined;
+      }
+      return color;
     }
-    const iconColor = stateColorCss(stateObj);
-    if (iconColor) {
-      return iconColor;
-    }
-    return undefined;
-  }
+  );
 
   private _handleAction(ev: ActionHandlerEvent) {
     fireEvent(this, "hass-action", {

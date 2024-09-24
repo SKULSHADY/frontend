@@ -115,6 +115,7 @@ export interface ButtonCardConfig extends LovelaceCardConfig {
   double_tap_action?: ActionConfig;
   state_color?: boolean;
   show_state?: boolean;
+  color?: string;
 }
 
 export interface EnergyCardBaseConfig extends LovelaceCardConfig {

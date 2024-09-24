@@ -29,6 +29,7 @@ const cardConfigStruct = assign(
     hold_action: optional(actionConfigStruct),
     theme: optional(string()),
     show_state: optional(boolean()),
+    color: optional(string()),
   })
 );
 
@@ -83,6 +84,14 @@ export class HuiButtonCardEditor
             { name: "icon_height", selector: { text: { suffix: "px" } } },
             { name: "theme", selector: { theme: {} } },
           ],
+        },
+        {
+          name: "color",
+          selector: {
+            ui_color: {
+              default_color: "primary",
+            },
+          },
         },
         {
           name: "tap_action",
@@ -150,6 +159,10 @@ export class HuiButtonCardEditor
       case "hold_action":
         return this.hass!.localize(
           "ui.panel.lovelace.editor.card.button.default_action_help"
+        );
+      case "color":
+        return this.hass!.localize(
+          `ui.panel.lovelace.editor.card.button.${schema.name}_helper`
         );
       default:
         return undefined;
