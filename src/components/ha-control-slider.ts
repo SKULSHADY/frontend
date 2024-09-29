@@ -596,7 +596,7 @@ export class HaControlSlider extends LitElement {
       }
 
       .slider .slider-track-cursor {
-        --cursor-size: calc(var(--control-slider-thickness) / 4);
+        --cursor-size: calc(var(--control-slider-thickness) / 8);
         position: absolute;
         background-color: white;
         transition:
