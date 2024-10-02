@@ -147,7 +147,7 @@ export class HuiHeadingCard extends LitElement implements LovelaceCard {
         transition: transform 180ms ease-in-out;
       }
       .container {
-        padding: 2px 4px;
+        padding: 16px 12px 4px;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
@@ -175,9 +175,8 @@ export class HuiHeadingCard extends LitElement implements LovelaceCard {
         gap: 8px;
         color: var(--ha-heading-card-title-color, var(--primary-text-color));
         font-size: var(--ha-heading-card-title-font-size, 16px);
-        font-weight: var(--ha-heading-card-title-font-weight, 400);
+        font-weight: var(--ha-heading-card-title-font-weight, 500);
         line-height: var(--ha-heading-card-title-line-height, 24px);
-        letter-spacing: 0.1px;
         --mdc-icon-size: 18px;
       }
       .content ha-icon,
@@ -187,7 +186,6 @@ export class HuiHeadingCard extends LitElement implements LovelaceCard {
       }
       .content p {
         margin: 0;
-        font-family: Roboto;
         font-style: normal;
         white-space: nowrap;
         overflow: hidden;
@@ -196,10 +194,7 @@ export class HuiHeadingCard extends LitElement implements LovelaceCard {
         min-width: 0;
       }
       .content.subtitle {
-        color: var(
-          --ha-heading-card-subtitle-color,
-          var(--secondary-text-color)
-        );
+        color: var(--ha-heading-card-title-color, var(--primary-text-color));
         font-size: var(--ha-heading-card-subtitle-font-size, 14px);
         font-weight: var(--ha-heading-card-subtitle-font-weight, 500);
         line-height: var(--ha-heading-card-subtitle-line-height, 20px);
