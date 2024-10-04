@@ -204,7 +204,7 @@ export const haStyleScrollbar = css`
 
 export const baseEntrypointStyles = css`
   body {
-    background-color: var(--primary-background-color);
+    background-color: var(--app-header-background-color);
     color: var(--primary-text-color);
     height: calc(100vh - 32px);
     width: 100vw;

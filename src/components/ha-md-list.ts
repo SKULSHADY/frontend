@@ -8,7 +8,7 @@ export class HaMdList extends MdList {
     ...super.styles,
     css`
       :host {
-        --md-sys-color-surface: var(--card-background-color);
+        --md-sys-color-surface: var(--app-header-background-color);
       }
     `,
   ];

@@ -128,7 +128,7 @@ export class HaDialog extends DialogBase {
         -webkit-backdrop-filter: var(--ha-dialog-surface-backdrop-filter, none);
         backdrop-filter: var(--ha-dialog-surface-backdrop-filter, none);
         background: var(
-          --ha-dialog-surface-background,
+          --app-header-background-color,
           var(--mdc-theme-surface, #fff)
         );
       }

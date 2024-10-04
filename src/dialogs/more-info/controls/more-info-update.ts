@@ -251,7 +251,7 @@ class MoreInfoUpdate extends LitElement {
       .actions {
         border-top: 1px solid var(--divider-color);
         background: var(
-          --ha-dialog-surface-background,
+          --app-header-background-color,
           var(--mdc-theme-surface, #fff)
         );
         margin: 8px 0 0;
