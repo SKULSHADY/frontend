@@ -6144,6 +6144,8 @@
               "color": "Color",
               "color_helper": "Inactive state (e.g. off, closed) will not be colored.",
               "icon_tap_action": "Icon tap behavior",
+              "icon_double_tap_action": "Icon double tap behavior",
+              "icon_hold_action": "Icon hold behavior",
               "interactions": "Interactions",
               "appearance": "Appearance",
               "show_entity_picture": "Show entity picture",

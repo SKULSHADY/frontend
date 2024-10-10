@@ -34,6 +34,9 @@ export const DEFAULT_CONFIG: EntityBadgeConfig = {
   show_name: false,
   show_state: true,
   show_icon: true,
+  tap_action: { action: "more-info" },
+  double_tap_action: { action: "none" },
+  hold_action: { action: "none" },
 };
 
 export const migrateLegacyEntityBadgeConfig = (

@@ -47,7 +47,11 @@ const cardConfigStruct = assign(
     show_entity_picture: optional(boolean()),
     vertical: optional(boolean()),
     tap_action: optional(actionConfigStruct),
+    double_tap_action: optional(actionConfigStruct),
+    hold_action: optional(actionConfigStruct),
     icon_tap_action: optional(actionConfigStruct),
+    icon_double_tap_action: optional(actionConfigStruct),
+    icon_hold_action: optional(actionConfigStruct),
     features: optional(array(any())),
   })
 );
@@ -147,12 +151,44 @@ export class HuiTileCardEditor
               },
             },
             {
+              name: "double_tap_action",
+              selector: {
+                ui_action: {
+                  default_action: "none",
+                },
+              },
+            },
+            {
+              name: "hold_action",
+              selector: {
+                ui_action: {
+                  default_action: "none",
+                },
+              },
+            },
+            {
               name: "icon_tap_action",
               selector: {
                 ui_action: {
                   default_action: entityId
                     ? getEntityDefaultTileIconAction(entityId)
                     : "more-info",
+                },
+              },
+            },
+            {
+              name: "icon_double_tap_action",
+              selector: {
+                ui_action: {
+                  default_action: "none",
+                },
+              },
+            },
+            {
+              name: "icon_hold_action",
+              selector: {
+                ui_action: {
+                  default_action: "none",
                 },
               },
             },
@@ -277,6 +313,8 @@ export class HuiTileCardEditor
     switch (schema.name) {
       case "color":
       case "icon_tap_action":
+      case "icon_double_tap_action":
+      case "icon_hold_action":
       case "show_entity_picture":
       case "vertical":
       case "hide_state":
