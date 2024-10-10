@@ -39,7 +39,7 @@ export class HuiMediaVolumeCardFeatureEditor
               options: ["slider", "buttons"].map((mode) => ({
                 value: mode,
                 label: localize(
-                  `ui.panel.lovelace.editor.card.card.features.types.media-volume.style_list.${mode}`
+                  `ui.panel.lovelace.editor.features.types.media-volume.style_list.${mode}`
                 ),
               })),
             },
@@ -79,7 +79,7 @@ export class HuiMediaVolumeCardFeatureEditor
     schema: SchemaUnion<ReturnType<typeof this._schema>>
   ) =>
     this.hass!.localize(
-      `ui.panel.lovelace.editor.card.card.features.types.media-volume.${schema.name}`
+      `ui.panel.lovelace.editor.features.types.media-volume.${schema.name}`
     );
 }
 

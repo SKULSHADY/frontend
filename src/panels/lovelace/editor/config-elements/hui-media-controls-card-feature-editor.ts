@@ -64,7 +64,7 @@ export class HuiMediaControlsCardFeatureEditor
     schema: SchemaUnion<ReturnType<typeof this._schema>>
   ) =>
     this.hass!.localize(
-      `ui.panel.lovelace.editor.card.card.features.types.media-controls.${schema.name}`
+      `ui.panel.lovelace.editor.features.types.media-controls.${schema.name}`
     );
 }
 
