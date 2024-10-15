@@ -200,7 +200,7 @@ export class HuiButtonCard extends LitElement implements LovelaceCard {
 
     const color = stateObj
       ? this._computeStateColor(stateObj, this._config.color)
-      : "primary";
+      : "var(--primary-color)";
 
     const style = {
       "--color": color,
