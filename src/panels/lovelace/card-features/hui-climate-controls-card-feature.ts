@@ -1,14 +1,4 @@
-import {
-  mdiFan,
-  mdiFanAuto,
-  mdiFanSpeed1,
-  mdiFanSpeed2,
-  mdiFanSpeed3,
-  mdiFire,
-  mdiPower,
-  mdiSnowflake,
-  mdiSunSnowflakeVariant,
-} from "@mdi/js";
+import { mdiFanAuto, mdiFanSpeed1, mdiFanSpeed2, mdiFanSpeed3 } from "@mdi/js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { html, LitElement, nothing, PropertyValues } from "lit";
 import { customElement, property, state } from "lit/decorators";
@@ -21,18 +11,21 @@ import { supportsFeature } from "../../../common/entity/supports-feature";
 import { debounce } from "../../../common/util/debounce";
 import "../../../components/ha-control-button-group";
 import "../../../components/ha-control-number-buttons";
-import { ClimateEntity, ClimateEntityFeature } from "../../../data/climate";
+import {
+  ClimateEntity,
+  ClimateEntityFeature,
+  climateHvacModeIcon,
+} from "../../../data/climate";
 import { UNAVAILABLE } from "../../../data/entity";
 import { HomeAssistant } from "../../../types";
 import { LovelaceCardFeature, LovelaceCardFeatureEditor } from "../types";
 import { cardFeatureStyles } from "./common/card-feature-styles";
+import { filterModes } from "./common/filter-modes";
 import { ClimateControlsCardFeatureConfig } from "./types";
 
 type Target = "value" | "low" | "high";
 
-export const supportsClimateControlsCardFeature = (
-  stateObj: HassEntity
-) => {
+export const supportsClimateControlsCardFeature = (stateObj: HassEntity) => {
   const domain = computeDomain(stateObj.entity_id);
   return (
     domain === "climate" &&
@@ -62,15 +55,7 @@ class HuiClimateControlsCardFeature
 
   @state() private _hvacMode: number = 0;
 
-  _hvacModes = ["off", "fan_only", "heat_cool", "heat", "cool"];
-
-  _hvacIcons = [
-    mdiPower,
-    mdiFan,
-    mdiSunSnowflakeVariant,
-    mdiFire,
-    mdiSnowflake,
-  ];
+  _hvacModes = ["auto", "heat_cool", "heat", "cool", "dry", "fan_only", "off"];
 
   static getStubConfig(): ClimateControlsCardFeatureConfig {
     return {
@@ -83,9 +68,7 @@ class HuiClimateControlsCardFeature
     await import(
       "../editor/config-elements/hui-climate-controls-card-feature-editor"
     );
-    return document.createElement(
-      "hui-climate-controls-card-feature-editor"
-    );
+    return document.createElement("hui-climate-controls-card-feature-editor");
   }
 
   public setConfig(config: ClimateControlsCardFeatureConfig): void {
@@ -93,6 +76,8 @@ class HuiClimateControlsCardFeature
       throw new Error("Invalid configuration");
     }
     this._config = config;
+
+    this._hvacModes = filterModes(this._hvacModes, this._config.hvac_modes);
   }
 
   protected willUpdate(changedProp: PropertyValues): void {
@@ -131,7 +116,7 @@ class HuiClimateControlsCardFeature
   private _onHvacTap(ev: CustomEvent): void {
     ev.stopPropagation();
     this._hvacMode += 1;
-    if (this._hvacMode > 2) this._hvacMode = 0;
+    if (this._hvacMode > this._hvacModes.length - 1) this._hvacMode = 0;
     this.hass!.callService("climate", "set_hvac_mode", {
       entity_id: this.stateObj!.entity_id,
       hvac_mode: this._hvacModes[this._hvacMode],
@@ -215,7 +200,18 @@ class HuiClimateControlsCardFeature
       return nothing;
     }
 
-    const stateColor = stateColorCss(this.stateObj);
+    const isOff = this.stateObj.state === "off";
+    const iconColor = isOff
+      ? "var(--primary-text-color)"
+      : "var(--disabled-color)";
+    const stateColor = isOff
+      ? "var(--disabled-color)"
+      : stateColorCss(this.stateObj);
+    const rippleColor = isOff
+      ? "var(--secondary-text-color)"
+      : stateColorCss(this.stateObj);
+    const buttonOpacity = isOff ? 0.2 : 1;
+    const rippleOpacity = isOff ? 0.04 : 0.12;
     const digits = this._step.toString().split(".")?.[1]?.length ?? 0;
 
     const options = {
@@ -234,10 +230,17 @@ class HuiClimateControlsCardFeature
             <ha-control-button
               @click=${this._onHvacTap}
               class="hvac-mode"
-              style="width: 100%, min-width: 40px"
+              style=${styleMap({
+                "--control-button-icon-color": iconColor,
+                "--control-button-background-color": stateColor,
+                "--control-button-background-opacity": buttonOpacity,
+                "--ha-ripple-color": rippleColor,
+                "min-width": "40px",
+                width: "100%",
+              })}
             >
               <ha-svg-icon
-                .path=${this._hvacIcons[this._hvacMode]}
+                .path=${climateHvacModeIcon(this.stateObj.state ?? "off")}
               ></ha-svg-icon>
             </ha-control-button>
             <ha-control-number-buttons
@@ -254,8 +257,8 @@ class HuiClimateControlsCardFeature
                 "temperature"
               )}
               style=${styleMap({
-                "--control-number-buttons-focus-color": stateColor,
-                width: "188%",
+                "--control-number-buttons-focus-color": rippleColor,
+                width: "calc(16px + 200%)",
               })}
               .disabled=${this.stateObj!.state === UNAVAILABLE}
               .locale=${this.hass.locale}
@@ -263,7 +266,12 @@ class HuiClimateControlsCardFeature
             </ha-control-number-buttons>
             <ha-control-button
               @click=${this._onFanTap}
-              style="width: 100%, min-width: 40px"
+              style=${styleMap({
+                "--ha-ripple-hover-opacity": rippleOpacity,
+                "--ha-ripple-color": rippleColor,
+                "min-width": "40px",
+                width: "100%",
+              })}
             >
               <ha-svg-icon .path=${this._fanIcons[this._fanMode]}></ha-svg-icon>
             </ha-control-button>
@@ -295,68 +303,13 @@ class HuiClimateControlsCardFeature
           </ha-control-number-buttons>
           <ha-control-button
             @click=${this._onFanTap}
-            style="width: 100%, min-width: 40px"
+            style=${styleMap({
+              "min-width": "40px",
+              width: "100%",
+            })}
           >
             <ha-svg-icon .path=${this._fanIcons[this._fanMode]}></ha-svg-icon>
           </ha-control-button>
-        </ha-control-button-group>
-      `;
-    }
-
-    if (
-      this._supportsTargetRange() &&
-      this._targetTemperature.low != null &&
-      this._targetTemperature.high != null &&
-      this.stateObj.state !== UNAVAILABLE
-    ) {
-      return html`
-        <ha-control-button-group>
-          <ha-control-number-buttons
-            .formatOptions=${options}
-            .target=${"low"}
-            .value=${this._targetTemperature.low}
-            .unit=${this.hass.config.unit_system.temperature}
-            .min=${this._min}
-            .max=${Math.min(
-              this._max,
-              this._targetTemperature.high ?? this._max
-            )}
-            .step=${this._step}
-            @value-changed=${this._valueChanged}
-            .label=${this.hass.formatEntityAttributeName(
-              this.stateObj,
-              "target_temp_low"
-            )}
-            style=${styleMap({
-              "--control-number-buttons-focus-color": stateColor,
-            })}
-            .disabled=${this.stateObj!.state === UNAVAILABLE}
-            .locale=${this.hass.locale}
-          >
-          </ha-control-number-buttons>
-          <ha-control-number-buttons
-            .formatOptions=${options}
-            .target=${"high"}
-            .value=${this._targetTemperature.high}
-            .unit=${this.hass.config.unit_system.temperature}
-            .min=${Math.max(
-              this._min,
-              this._targetTemperature.low ?? this._min
-            )}
-            .max=${this._max}
-            .step=${this._step}
-            @value-changed=${this._valueChanged}
-            .label=${this.hass.formatEntityAttributeName(
-              this.stateObj,
-              "target_temp_high"
-            )}
-            style=${styleMap({
-              "--control-number-buttons-focus-color": stateColor,
-            })}
-            .disabled=${this.stateObj!.state === UNAVAILABLE}
-            .locale=${this.hass.locale}
-          >
-          </ha-control-number-buttons>
         </ha-control-button-group>
       `;
     }

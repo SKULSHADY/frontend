@@ -122,6 +122,11 @@ class HuiClimateSwingModesCardFeature
 
     const stateObj = this.stateObj;
 
+    const color =
+      stateObj.state === "off"
+        ? "var(--primary-text-color)"
+        : "var(--disabled-color)";
+
     const options = filterModes(
       stateObj.attributes.swing_modes,
       this._config!.swing_modes
@@ -153,6 +158,7 @@ class HuiClimateSwingModesCardFeature
             "swing_mode"
           )}
           .disabled=${this.stateObj!.state === UNAVAILABLE}
+          style="--control-select-selected-color: ${color}"
         >
         </ha-control-select>
       `;

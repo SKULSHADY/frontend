@@ -104,6 +104,7 @@ export interface TargetTemperatureCardFeatureConfig {
 export interface ClimateControlsCardFeatureConfig {
   type: "climate-controls";
   fan_modes?: string[];
+  hvac_modes?: string[];
   show_hvac_modes: boolean;
 }
 

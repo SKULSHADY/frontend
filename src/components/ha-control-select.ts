@@ -198,13 +198,15 @@ export class HaControlSelect extends LitElement {
       :host {
         display: block;
         --control-select-color: var(--primary-color);
-        --control-select-focused-opacity: 0.2;
+        --control-select-focused-opacity: 0.12;
+        --control-select-selected-color: white;
         --control-select-selected-opacity: 1;
         --control-select-background: var(--disabled-color);
         --control-select-background-opacity: 0.2;
         --control-select-thickness: 40px;
         --control-select-border-radius: 10px;
         --control-select-padding: 4px;
+        --control-select-gap: 8px;
         --control-select-button-border-radius: calc(
           var(--control-select-border-radius) - var(--control-select-padding)
         );
@@ -238,6 +240,7 @@ export class HaControlSelect extends LitElement {
         flex-direction: row;
         padding: var(--control-select-padding);
         box-sizing: border-box;
+        gap: var(--control-select-gap);
       }
       .container::before {
         position: absolute;
@@ -291,7 +294,7 @@ export class HaControlSelect extends LitElement {
         opacity: var(--control-select-focused-opacity);
       }
       .option.selected {
-        color: white;
+        color: var(--control-select-selected-color);
       }
       .option.selected::before {
         opacity: var(--control-select-selected-opacity);
