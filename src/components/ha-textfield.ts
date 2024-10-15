@@ -170,6 +170,7 @@ export class HaTextField extends TextFieldBase {
 
       .mdc-text-field {
         overflow: var(--text-field-overflow);
+        border-radius: var(--text-field-radius, 4px);
       }
 
       .mdc-floating-label {

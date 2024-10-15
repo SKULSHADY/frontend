@@ -212,6 +212,7 @@ export class HuiTodoListCard extends LitElement implements LovelaceCard {
                   )}
                   @keydown=${this._addKeyPress}
                   .disabled=${unavailable}
+                  style="--text-field-radius: 99px;"
                 ></ha-textfield>
                 <ha-icon-button
                   class="addButton"
