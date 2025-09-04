@@ -6202,6 +6202,7 @@
             "add_entities_lovelace": "Add to dashboard",
             "none": "This device has no entities",
             "show_less": "Show less",
+            "hidden_entities": "+{count} hidden {count, plural,\n  one {entity}\n  other {entities}\n}",
             "disabled_entities": "+{count} disabled {count, plural,\n  one {entity}\n  other {entities}\n}",
             "hidden": "Hidden"
           },

@@ -41,6 +41,14 @@ export class HaDeviceEntitiesCard extends LitElement {
   @property({ attribute: "show-hidden", type: Boolean })
   public showHidden = false;
 
+  @property({ attribute: "show-disabled", type: Boolean })
+  public showDisabled = false;
+
+  @state() private _extHiddenEntityEntries?: Record<
+    string,
+    ExtEntityRegistryEntry
+  >;
+
   @state() private _extDisabledEntityEntries?: Record<
     string,
     ExtEntityRegistryEntry
@@ -72,12 +80,21 @@ export class HaDeviceEntitiesCard extends LitElement {
 
     const shownEntities: EntityRegistryStateEntry[] = [];
     const hiddenEntities: EntityRegistryStateEntry[] = [];
+    const disabledEntities: EntityRegistryStateEntry[] = [];
 
     this.entities.forEach((entry) => {
       if (entry.disabled_by) {
         if (this._extDisabledEntityEntries) {
-          hiddenEntities.push(
+          disabledEntities.push(
             this._extDisabledEntityEntries[entry.entity_id] || entry
+          );
+        } else {
+          disabledEntities.push(entry);
+        }
+      } else if (entry.hidden_by) {
+        if (this._extHiddenEntityEntries) {
+          hiddenEntities.push(
+            this._extHiddenEntityEntries[entry.entity_id] || entry
           );
         } else {
           hiddenEntities.push(entry);
@@ -108,7 +125,7 @@ export class HaDeviceEntitiesCard extends LitElement {
                 ? html`
                     <button class="show-more" @click=${this._toggleShowHidden}>
                       ${this.hass.localize(
-                        "ui.panel.config.devices.entities.disabled_entities",
+                        "ui.panel.config.devices.entities.hidden_entities",
                         { count: hiddenEntities.length }
                       )}
                     </button>
@@ -118,6 +135,37 @@ export class HaDeviceEntitiesCard extends LitElement {
                       ${hiddenEntities.map((entry) => this._renderEntry(entry))}
                     </ha-list>
                     <button class="show-more" @click=${this._toggleShowHidden}>
+                      ${this.hass.localize(
+                        "ui.panel.config.devices.entities.show_less"
+                      )}
+                    </button>
+                  `}
+            </div>`
+          : nothing}
+        ${disabledEntities.length
+          ? html`<div class=${classMap({ "move-up": !shownEntities.length })}>
+              ${!this.showDisabled
+                ? html`
+                    <button
+                      class="show-more"
+                      @click=${this._toggleShowDisabled}
+                    >
+                      ${this.hass.localize(
+                        "ui.panel.config.devices.entities.disabled_entities",
+                        { count: disabledEntities.length }
+                      )}
+                    </button>
+                  `
+                : html`
+                    <ha-list>
+                      ${disabledEntities.map((entry) =>
+                        this._renderEntry(entry)
+                      )}
+                    </ha-list>
+                    <button
+                      class="show-more"
+                      @click=${this._toggleShowDisabled}
+                    >
                       ${this.hass.localize(
                         "ui.panel.config.devices.entities.show_less"
                       )}
@@ -138,7 +186,33 @@ export class HaDeviceEntitiesCard extends LitElement {
 
   private _toggleShowHidden() {
     this.showHidden = !this.showHidden;
-    if (!this.showHidden || this._extDisabledEntityEntries !== undefined) {
+    if (!this.showDisabled || this._extHiddenEntityEntries !== undefined) {
+      return;
+    }
+    this._extHiddenEntityEntries = {};
+    const toFetch = this.entities.filter((entry) => entry.hidden_by);
+
+    const worker = async () => {
+      if (toFetch.length === 0) {
+        return;
+      }
+
+      const entityId = toFetch.pop()!.entity_id;
+      const entry = await getExtendedEntityRegistryEntry(this.hass, entityId);
+      this._extHiddenEntityEntries![entityId] = entry;
+      this.requestUpdate("_extHiddenEntityEntries");
+      worker();
+    };
+
+    // Fetch 3 in parallel
+    worker();
+    worker();
+    worker();
+  }
+
+  private _toggleShowDisabled() {
+    this.showDisabled = !this.showDisabled;
+    if (!this.showDisabled || this._extDisabledEntityEntries !== undefined) {
       return;
     }
     this._extDisabledEntityEntries = {};
