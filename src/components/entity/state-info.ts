@@ -1,7 +1,7 @@
 import type { HassEntity } from "home-assistant-js-websocket";
 import { css, html, LitElement, nothing } from "lit";
 import { customElement, property } from "lit/decorators";
-import { computeStateName } from "../../common/entity/compute_state_name";
+import { computeEntityName } from "../../common/entity/compute_entity_name";
 import type { HomeAssistant } from "../../types";
 import "../ha-relative-time";
 import "./state-badge";
@@ -22,7 +22,7 @@ class StateInfo extends LitElement {
       return nothing;
     }
 
-    const name = computeStateName(this.stateObj);
+    const name = computeEntityName(this.stateObj, this.hass);
 
     return html`<state-badge
         .hass=${this.hass}
